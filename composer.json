@@ -1,0 +1,7 @@
+{
+	"require": {
+		"slim/slim":"^3.0",
+		"curl/curl": "^1.5"
+	}
+}
+
