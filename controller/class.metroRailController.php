@@ -112,27 +112,21 @@ class metroRailController {
 	public function getAllDetailsForRoute($routeId) {
 
 		$stops = null;
+		$response = new stdClass();
+		$response->route = json_decode($this->getStopsByRoute($routeId));
+		$response->stops = array();
 
-		$response = array (
-			'route'=> $this->callController->getData('https://proserver.gometro.co.za/api/v1/rail/routes/' . $routeId . '/stops'),
-			'stops'=> null,
-			'lineUpdate' => $this->getLineUpdates()
-		);
-
-		$response['route'] = $this->callController->getData('https://proserver.gometro.co.za/api/v1/rail/routes/' . $routeId . '/stops');
-		
-		if(empty($response['route'])) {
+		if(empty($response)) {
 			return false;
 		}
 
-		$stops = json_decode($response['route']);
+		$stops = $response->route;
 		$counter = 0;
 
 		foreach($stops as $stop) {
-			$response['stops'][$counter++] = $this->getStopDetails($stop->id);
+			$response->stops[$counter++] = json_decode($this->getStopDetails($stop->id));
 		}
 		
-		$this->displayDebugData($response);
-		die;
+		return json_encode($response);
 	}
 }

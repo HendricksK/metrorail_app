@@ -9,13 +9,13 @@ trait debug {
 			print_r($data);
 			echo '</pre>';
 			
-			return true;	
+			die;
 		}
 
 		echo '<pre>';
 		echo $data;
 		echo '</pre>';
 		
-		return true;
+		die;
 	}
 }
