@@ -10,5 +10,10 @@ Vagrant.configure("2") do |config|
     
     # Optional NFS. Make sure to remove other synced_folder line too
     #config.vm.synced_folder ".", "/var/www", :nfs => { :mount_options => ["dmode=777","fmode=666"] }
+    #
+    #=======SSH CONFIG
+    
+    config.ssh.username = "vagrant"
+	config.ssh.password = "vagrant"
 
 end

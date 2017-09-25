@@ -15,10 +15,42 @@ $app->get('/', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/metrorail', function (Request $request, Response $response) {
+$app->get('/sample', function (Request $request, Response $response) {
     
     $metroRailController = new metroRailController();
     $response->getBody()->write('Metro Rail Routes' . '<br>' . $metroRailController->getSampleData());
+
+    return $response;
+});
+
+$app->get('/routes', function (Request $request, Response $response) {
+    
+    $metroRailController = new metroRailController();
+    $response->getBody()->write($metroRailController->getAllRoutes());
+
+    return $response;
+});
+
+$app->get('/stops/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $metroRailController = new metroRailController();
+    $response->getBody()->write($metroRailController->getStopsByRoute($lineId));
+
+    return $response;
+});
+
+$app->get('/stop/{id}', function (Request $request, Response $response) {
+    $stopId = $request->getAttribute('id');
+    $metroRailController = new metroRailController();
+    $response->getBody()->write($metroRailController->getStopDetails($stopId));
+
+    return $response;
+});
+
+$app->get('/all-updates/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $metroRailController = new metroRailController();
+    $response->getBody()->write($metroRailController->getAllDetailsForRoute($lineId));
 
     return $response;
 });
