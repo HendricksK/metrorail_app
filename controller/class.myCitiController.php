@@ -3,7 +3,7 @@
 require_once(DIRNAME(__FILE__) . '/class.callController.php');
 require_once(DIRNAME(__FILE__) . '/../traits/trait.debug.php');
 
-class myCityController {
+class myCitiController {
 
 	use debug;
 
@@ -82,4 +82,33 @@ class myCityController {
 
 		return $response;
 	}
+
+		/**
+	 * NB this needs to run as cron and rather pull data from a database,
+	 * request takes way too long
+	 * [getAllDetailsForRoute returns route, as well as all stops on the route]
+	 * @param  [type] $routeId [description]
+	 * @return [type]          [description]
+	 */
+	public function getAllDetailsForRoute($routeId) {
+
+		$stops = null;
+		$response = new stdClass();
+		$response->route = json_decode($this->getStopsByRoute($routeId));
+		$response->stops = array();
+
+		if(empty($response)) {
+			return false;
+		}
+
+		$stops = $response->route;
+		$counter = 0;
+
+		foreach($stops as $stop) {
+			$response->stops[$counter++] = json_decode($this->getStopDetails($stop->id));
+		}
+		
+		return json_encode($response);
+	}
+
 }

@@ -65,7 +65,7 @@ $app->get('/metrorail/all-updates/{id}', function (Request $request, Response $r
 
 $app->get('/myciti/routes', function (Request $request, Response $response) {
     
-    $myCitiController = new myCityController();
+    $myCitiController = new myCitiController();
     $response->getBody()->write($myCitiController->getAllRoutes());
 
     return $response;
@@ -73,8 +73,24 @@ $app->get('/myciti/routes', function (Request $request, Response $response) {
 
 $app->get('/myciti/stops/{id}', function (Request $request, Response $response) {
     $lineId = $request->getAttribute('id');
-    $metroRailController = new metroRailController();
-    $response->getBody()->write($metroRailController->getStopsByRoute($lineId));
+    $myCitiController = new myCitiController();
+    $response->getBody()->write($myCitiController->getStopsByRoute($lineId));
+
+    return $response;
+});
+
+$app->get('/myciti/stop/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $myCitiController = new myCitiController();
+    $response->getBody()->write($myCitiController->getStopDetails($lineId));
+
+    return $response;
+});
+
+$app->get('/myciti/all-updates/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $myCitiController = new myCitiController();
+    $response->getBody()->write($myCitiController->getAllDetailsForRoute($lineId));
 
     return $response;
 });
