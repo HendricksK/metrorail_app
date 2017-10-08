@@ -5,6 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require(DIRNAME(__FILE__) . '../../vendor/autoload.php');
 require(DIRNAME(__FILE__) . '../../controller/class.metroRailController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.myCitiController.php');
+require(DIRNAME(__FILE__) . '../../controller/class.goldenArrowController.php');
 
 $app = new \Slim\App;
 
@@ -91,6 +92,42 @@ $app->get('/myciti/all-updates/{id}', function (Request $request, Response $resp
     $lineId = $request->getAttribute('id');
     $myCitiController = new myCitiController();
     $response->getBody()->write($myCitiController->getAllDetailsForRoute($lineId));
+
+    return $response;
+});
+
+/**
+ * All of the Golden Arrow api calls
+ */
+
+$app->get('/goldenarrow/routes', function (Request $request, Response $response) {
+    
+    $goldenArrowController = new goldenArrowController();
+    $response->getBody()->write($goldenArrowController->getAllRoutes());
+
+    return $response;
+});
+
+$app->get('/goldenarrow/stops/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $goldenArrowController = new goldenArrowController();
+    $response->getBody()->write($goldenArrowController->getStopsByRoute($lineId));
+
+    return $response;
+});
+
+$app->get('/goldenarrow/stop/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $goldenArrowController = new goldenArrowController();
+    $response->getBody()->write($goldenArrowController->getStopDetails($lineId));
+
+    return $response;
+});
+
+$app->get('/goldenarrow/all-updates/{id}', function (Request $request, Response $response) {
+    $lineId = $request->getAttribute('id');
+    $goldenArrowController = new goldenArrowController();
+    $response->getBody()->write($goldenArrowController->getAllDetailsForRoute($lineId));
 
     return $response;
 });
