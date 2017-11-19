@@ -42,7 +42,13 @@ class transportUpdatesController {
 	`transport_type`
 	`transport_location`
 	 */
-
+	/**
+	 * [insertTransportData inserts data into
+	 * the transport data]
+	 * @param  [type] $data [data set being inserted]
+	 * @return [type]       [whether the insert went
+	 * or not json]
+	 */
 	public function insertTransportData($data) {
 
 		try {
@@ -65,8 +71,20 @@ class transportUpdatesController {
 
 	}
 
-	public function retrieveAllTransportData() {
+	/**
+	 * [retrieveAllTransportData returns all data
+	 * from the transport_update]
+	 * @return [type] [description]
+	 */
+	public function retrieveAllTransportData($date) {
+		try {
 
+			$data = $this->database->select('transport_updates', '*');
+			return json_encode($data);
+
+		} catch (Exception $e) {
+			return json_encode($e);
+		}
 	}
 
 	public function retrieveTransportDataForLocation($locatonName, $transportType) {

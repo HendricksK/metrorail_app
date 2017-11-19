@@ -160,6 +160,14 @@ $app->post('/metrorail/insert', function (Request $request, Response $response) 
     return $response;
 });
 
+$app->get('/metrorail/transportdata', function (Request $request, Response $response) {
+
+    $transportUpdatesController = new transportUpdatesController();
+    $response->getBody()->write($transportUpdatesController->retrieveAllTransportData('2017-10-12 12:00:00'));
+
+    return $response;
+});
+
 $app->get('/couchdb/test', function(Request $request, Response $response) {
     $couchDBController = new CouchDBController();
     $response = $couchDBController->getDatabaseList();
@@ -174,7 +182,27 @@ $app->get('/couchdb/cache', function(Request $request, Response $response) {
     $couchDBController = new CouchDBController();
     $response = $couchDBController->createNewCacheDocument('sampleData2', $sampleData);
     
-    return json_encode($response);
+    return $response;
+});
+
+$app->get('/couchdb/update/cache', function(Request $request, Response $response) {
+    $metroRailController = new metroRailController();
+    $sampleData = $metroRailController->getSampleData();
+
+    $couchDBController = new CouchDBController();
+    $response = $couchDBController->updateCacheDocument('sampleData2', $sampleData);
+    
+    return $response;
+});
+
+$app->get('/couchdb/check/cache', function(Request $request, Response $response) {
+    $metroRailController = new metroRailController();
+    $sampleData = $metroRailController->getSampleData();
+
+    $couchDBController = new CouchDBController();
+    $response = $couchDBController->checkIfCacheExists('sampleData45');
+    
+    return $response;
 });
 
 $app->run();
