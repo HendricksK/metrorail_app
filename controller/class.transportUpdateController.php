@@ -73,13 +73,18 @@ class transportUpdatesController {
 
 	/**
 	 * [retrieveAllTransportData returns all data
-	 * from the transport_update]
+	 * from the transport_update,
+	 * based on a sepcfic date]
 	 * @return [type] [description]
 	 */
 	public function retrieveAllTransportData($date) {
 		try {
 
-			$data = $this->database->select('transport_updates', '*');
+			$data = $this->database->select('transport_updates', '*', 
+				[
+					'insert_date[>]' => $date
+				]
+			);
 			return json_encode($data);
 
 		} catch (Exception $e) {
