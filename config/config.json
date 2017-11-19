@@ -1,0 +1,18 @@
+{
+	"config": {
+		"database": {
+			"couchdbLocal": {
+				"accessUri":"192.168.99.100:32769",
+				"database":"metrocache",
+				"user":"user",
+				"secret":"secret"
+			},
+			"mysqlLocal": {
+				"accessUri":"127.0.0.1",
+				"database":"metrousers",
+				"user":"user",
+				"secret":"secret"
+			}
+		}
+	}
+}

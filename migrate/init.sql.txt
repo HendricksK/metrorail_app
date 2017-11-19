@@ -1,0 +1,21 @@
+create database metrodb_updates;
+
+use metrodb_updates;
+
+create table transport_updates (
+`id` bigint(10) not null AUTO_INCREMENT,
+`insert_date` timestamp not null default NOW(),
+`transport_id` VARCHAR(20)not null default '0',
+`transport_time` timestamp null default null,
+`transport_details` VARCHAR(255) default null,
+`user_id` VARCHAR(255) default null,
+primary KEY(id));
+
+alter table transport_updates
+add column `transport_type` int not null default 0,
+add column `transport_location` int not null default 0;
+
+select * from metrodb_updates.transport_updates;
+
+alter table metrodb_updates.transport_updates
+modify column `transport_location` VARCHAR(20) not null default '0';

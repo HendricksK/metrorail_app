@@ -6,8 +6,16 @@ require(DIRNAME(__FILE__) . '../../vendor/autoload.php');
 require(DIRNAME(__FILE__) . '../../controller/class.metroRailController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.myCitiController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.goldenArrowController.php');
+require(DIRNAME(__FILE__) . '../../controller/class.transportUpdateController.php');
 
-$app = new \Slim\App;
+$configuration = [
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+];
+$c = new \Slim\Container($configuration);
+
+$app = new \Slim\App($c);
 
 /**
  * All of the metrorail train API calls as well 
@@ -128,6 +136,25 @@ $app->get('/goldenarrow/all-updates/{id}', function (Request $request, Response 
     $lineId = $request->getAttribute('id');
     $goldenArrowController = new goldenArrowController();
     $response->getBody()->write($goldenArrowController->getAllDetailsForRoute($lineId));
+
+    return $response;
+});
+
+$app->post('/metrorail/insert', function (Request $request, Response $response) {
+
+    $queryParams = $request->getParsedBody();
+
+    $transportId = $queryParams['transport_id'];
+    $transportDetails = $queryParams['transport_details'];
+
+    $transportUpdatesController = new transportUpdatesController();
+
+    $data = array(
+        'transport_id' => $transportId,
+        'transport_details' => $transportDetails
+    );
+
+    $response->getBody()->write($transportUpdatesController->insertTransportData($data));
 
     return $response;
 });
