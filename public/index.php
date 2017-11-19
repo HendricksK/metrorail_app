@@ -7,6 +7,7 @@ require(DIRNAME(__FILE__) . '../../controller/class.metroRailController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.myCitiController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.goldenArrowController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.transportUpdateController.php');
+require(DIRNAME(__FILE__) . '../../controller/class.couchDBController.php');
 
 $configuration = [
     'settings' => [
@@ -157,6 +158,23 @@ $app->post('/metrorail/insert', function (Request $request, Response $response) 
     $response->getBody()->write($transportUpdatesController->insertTransportData($data));
 
     return $response;
+});
+
+$app->get('/couchdb/test', function(Request $request, Response $response) {
+    $couchDBController = new CouchDBController();
+    $response = $couchDBController->getDatabaseList();
+
+    return json_encode($response);
+});
+
+$app->get('/couchdb/cache', function(Request $request, Response $response) {
+    $metroRailController = new metroRailController();
+    $sampleData = $metroRailController->getSampleData();
+
+    $couchDBController = new CouchDBController();
+    $response = $couchDBController->createNewCacheDocument('sampleData2', $sampleData);
+    
+    return json_encode($response);
 });
 
 $app->run();
