@@ -13,6 +13,11 @@
 				"user":"user",
 				"secret":"secret"
 			}
+		},
+		"api": {
+			"metro-api": {
+				"url": "http://proserver.gometro.co.za"
+			}
 		}
 	}
 }

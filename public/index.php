@@ -8,6 +8,7 @@ require(DIRNAME(__FILE__) . '../../controller/class.myCitiController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.goldenArrowController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.transportUpdateController.php');
 require(DIRNAME(__FILE__) . '../../controller/class.couchDBController.php');
+require(DIRNAME(__FILE__) . '../../controller/class.multiModalRoutingController.php');
 
 $configuration = [
     'settings' => [
@@ -202,6 +203,12 @@ $app->get('/couchdb/check/cache', function(Request $request, Response $response)
     $couchDBController = new CouchDBController();
     $response = $couchDBController->checkIfCacheExists('sampleData45');
     
+    return $response;
+});
+
+$app->get('/metro/multi-modal', function(Request $request, Response $response) {
+    $multiModalRoutingController = new multiModalRoutingController();
+    $response = $multiModalRoutingController->testGetMultiModalRoute('random');
     return $response;
 });
 
