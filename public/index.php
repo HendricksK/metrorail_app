@@ -212,4 +212,19 @@ $app->get('/metro/multi-modal', function(Request $request, Response $response) {
     return $response;
 });
 
+$app->post('/insert-metro-update', function (Request $request, Response $response) {
+    $queryParams = $request->getParsedBody();
+    if(!empty($queryParams['transportId'])) {
+        //call insert controller, insert update into db
+        //will need to add transport type.
+    } else {
+        $responseArray = array();
+        $responseArray['data'] = 'null';
+        $responseArray['error'] = '1';
+        $responseArray['errorMessage'] = 'required data has not been produced';
+        $responseArray['callBack'] = '/insert-metro-update';
+        $responseArray['type'] = 'POST';
+    }
+});
+
 $app->run();
