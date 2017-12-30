@@ -55,13 +55,17 @@ class transportUpdatesController {
 
 			$this->database->insert('transport_updates', [
 			    'insert_date' => date('Y-m-d H:i:s'),
-			    'transport_id' => '0669',
+			    'transport_id' => $data['transport_id'],
 			    'transport_time' => date('Y-m-d H:i:s'),
-			    'transport_details' => 'got onto train, train is still empty, 5 minutes late',
+			    'transport_details' => $data['transport_details'],
 			    'user_id' => 0,
-			    'transport_type' => 1,
+			    'transport_type' => $data['transport_type'],
 			    'transport_location' => '1:12345'
 			]);
+
+			//will need to check medoo to see what we can get back after the insert
+			//like the ID of the inserted record and then return a message to say the insert was
+			//successful
 
 			return 'Your input is appreciated';
 
