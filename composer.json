@@ -2,9 +2,8 @@
 	"require": {
 		"slim/slim":"^3.0",
 		"curl/curl": "^1.5",
-		"catfan/Medoo": "^1.4",
 		"php-on-couch/php-on-couch": "^2.0",
 		"guzzlehttp/guzzle": "~6.0",
-		"slim/twig-view": "^2.3"
+		"psr7-sessions/storageless": "^3.0"		
 	}
 }
