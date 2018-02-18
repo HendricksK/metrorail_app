@@ -24,6 +24,8 @@ modify column `transport_location` VARCHAR(20) not null default '0';
 
 new table setups here  below 
 
+create database transport_metrorail;
+
 create table metrorail_updates (
 `id` int(10) unsigned not null AUTO_INCREMENT,
 `date_created` TIMESTAMP default CURRENT_TIMESTAMP,
@@ -40,3 +42,13 @@ create table metrorail_lines (
 `line_name` VARCHAR(50),
 primary key(id));
 
+create table metrorail_status (
+`id` int(10) unsigned not null auto_increment,
+`status_name` VARCHAR(20),
+primary key(id));
+
+ALTER TABLE metrorail_updates ADD COLUMN `date_updated` DATETIME default NULL;
+
+ALTER TABLE metrorail_updates ADD COLUMN `arrival_time` DATETIME default NULL;
+
+ALTER TABLE metrorail_updates ADD COLUMN `station` int(10) unsigned default NULL;

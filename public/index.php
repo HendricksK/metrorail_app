@@ -25,9 +25,38 @@ $app = new \Slim\App($c);
  */
 $app->get('/', function (Request $request, Response $response) {
     
-    $response->getBody()->write('Give me your location');
+    $response->
+        getBody()->
+        write('
+            <h1>These are the routes that should work</h1>
+            <ul style="list-style-type: none;">
+                <li>GET: <a href="/metrorail/routes">/metrorail/routes</a></li>
+                <li>GET: <a href="/metrorail/stops/13:90000160">/metrorail/stops/{id}</a></li>
+                <li>GET: <a href="/metrorail/stop/13:12">/metrorail/stop/{id}</a></li>
+                <li>GET: <a href="/metrorail/all-updates/13:f12">/metrorail/all-updates/{id}</a></li>
+                <li>GET: <a href="/metro/multi-modal">/metro/multi-modal</a></li>
+                <li>GET: <a href="metrorail/routes">metrorail/routes</a></li>
+            <ul>');
+        
+        return $response;
+});
 
-    return $response;
+$app->get('/api-map', function (Request $request, Response $response) {
+    
+    $response->
+        getBody()->
+        write('
+            <h1>These are the routes that should work</h1>
+            <ul style="list-style-type: none;">
+                <li>GET: <a href="/metrorail/routes">/metrorail/routes</a></li>
+                <li>GET: <a href="/metrorail/stops/13:90000160">/metrorail/stops/{id}</a></li>
+                <li>GET: <a href="/metrorail/stop/13:12">/metrorail/stop/{id}</a></li>
+                <li>GET: <a href="/metrorail/all-updates/13:f12">/metrorail/all-updates/{id}</a></li>
+                <li>GET: <a href="/metro/multi-modal">/metro/multi-modal</a></li>
+                <li>GET: <a href="metrorail/routes">metrorail/routes</a></li>
+            <ul>');
+        
+        return $response;
 });
 
 $app->get('/sample', function (Request $request, Response $response) {
@@ -69,6 +98,56 @@ $app->get('/metrorail/all-updates/{id}', function (Request $request, Response $r
 
     return $response;
 });
+
+$app->post('/metrorail/makeupdate', function (Request $request, Response $response) {
+
+    $queryParams = $request->getParsedBody();
+
+    $transportUpdatesController = new transportUpdatesController();
+
+    $data = array(
+        'train_id' => 1
+    );
+
+    $response->getBody()->write($transportUpdatesController->insertTransportData($data));
+
+    return $response;
+});
+
+$app->get('/metrorail/transportdata', function (Request $request, Response $response) {
+
+    $transportUpdatesController = new transportUpdatesController();
+    $response->getBody()->write($transportUpdatesController->retrieveAllTransportData());
+
+    return $response;
+});
+
+$app->get('/metro/multi-modal', function(Request $request, Response $response) {
+    $multiModalRoutingController = new multiModalRoutingController();
+    $response = $multiModalRoutingController->testGetMultiModalRoute('random');
+    return $response;
+});
+
+$app->post('/insert-metro-update', function (Request $request, Response $response) {
+    $queryParams = $request->getParsedBody();
+
+    if(!empty($queryParams['transport_id'])) {
+        $transportUpdatesController = new transportUpdatesController();
+        $response->getBody()->write($transportUpdatesController->insertTransportData($queryParams));
+        //call insert controller, insert update into db
+        //will need to add transport type.
+        return $response;
+    } else {
+        $responseArray = array();
+        $responseArray['data'] = 'null';
+        $responseArray['error'] = '1';
+        $responseArray['errorMessage'] = 'required data has not been produced';
+        $responseArray['callBack'] = '/insert-metro-update';
+        $responseArray['type'] = 'POST';
+        return $responseArray;
+    }
+});
+
 
 /**
  * All of the MyCiti api calls
@@ -142,33 +221,6 @@ $app->get('/goldenarrow/all-updates/{id}', function (Request $request, Response 
     return $response;
 });
 
-$app->post('/metrorail/insert', function (Request $request, Response $response) {
-
-    $queryParams = $request->getParsedBody();
-
-    $transportId = $queryParams['transport_id'];
-    $transportDetails = $queryParams['transport_details'];
-
-    $transportUpdatesController = new transportUpdatesController();
-
-    $data = array(
-        'transport_id' => $transportId,
-        'transport_details' => $transportDetails
-    );
-
-    $response->getBody()->write($transportUpdatesController->insertTransportData($data));
-
-    return $response;
-});
-
-$app->get('/metrorail/transportdata', function (Request $request, Response $response) {
-
-    $transportUpdatesController = new transportUpdatesController();
-    $response->getBody()->write($transportUpdatesController->retrieveAllTransportData('2017-10-12 12:00:00'));
-
-    return $response;
-});
-
 $app->get('/couchdb/test', function(Request $request, Response $response) {
     $couchDBController = new CouchDBController();
     $response = $couchDBController->getDatabaseList();
@@ -204,32 +256,6 @@ $app->get('/couchdb/check/cache', function(Request $request, Response $response)
     $response = $couchDBController->checkIfCacheExists('sampleData45');
     
     return $response;
-});
-
-$app->get('/metro/multi-modal', function(Request $request, Response $response) {
-    $multiModalRoutingController = new multiModalRoutingController();
-    $response = $multiModalRoutingController->testGetMultiModalRoute('random');
-    return $response;
-});
-
-$app->post('/insert-metro-update', function (Request $request, Response $response) {
-    $queryParams = $request->getParsedBody();
-
-    if(!empty($queryParams['transport_id'])) {
-        $transportUpdatesController = new transportUpdatesController();
-        $response->getBody()->write($transportUpdatesController->insertTransportData($queryParams));
-        //call insert controller, insert update into db
-        //will need to add transport type.
-        return $response;
-    } else {
-        $responseArray = array();
-        $responseArray['data'] = 'null';
-        $responseArray['error'] = '1';
-        $responseArray['errorMessage'] = 'required data has not been produced';
-        $responseArray['callBack'] = '/insert-metro-update';
-        $responseArray['type'] = 'POST';
-        return $responseArray;
-    }
 });
 
 $app->run();

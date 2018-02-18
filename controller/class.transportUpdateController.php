@@ -19,29 +19,13 @@ class transportUpdatesController {
 		// a config file that will be saved/locally
 		
 		try {
-			$this->database = new Medoo([
-				'database_type' => 'mysql',
-				'database_name' => 'metrodb_updates',
-				'server' => '127.0.0.1',
-				'username' => 'root',
-				'password' => 'root'
-			]);	
+			$this->database = new mysqli('127.0.0.1', 'root', 'root', 'transport_metrorail');
 		} catch (Exception $e) {
 			return json_encode($e);
 		}
 			
 	}
 
-	/**
-	 * `id` bigint(10) not null AUTO_INCREMENT,
-	`insert_date` timestamp not null default current_timestamp,
-	`transport_id` VARCHAR(20)not null default '0',
-	`transport_time` timestamp not null default current_timestamp,
-	`transport_details` VARCHAR(255) default null,
-	`user_id` VARCHAR(255) default null,
-	`transport_type`
-	`transport_location`
-	 */
 	/**
 	 * [insertTransportData inserts data into
 	 * the transport data]
@@ -53,21 +37,21 @@ class transportUpdatesController {
 
 		try {
 
-			$this->database->insert('transport_updates', [
-			    'insert_date' => date('Y-m-d H:i:s'),
-			    'transport_id' => $data['transport_id'],
-			    'transport_time' => date('Y-m-d H:i:s'),
-			    'transport_details' => $data['transport_details'],
-			    'user_id' => 0,
-			    'transport_type' => $data['transport_type'],
-			    'transport_location' => '1:12345'
-			]);
+			$sql = "INSERT INTO metrorail_updates
+				(date_created, train_id, line_id, update_text, status, sessionid, date_updated, arrival_time, station)
+				VALUES(CURRENT_TIMESTAMP, '0175', 0, 'a random update', 0, 'session789456FGFDGDF', null, null, 0)";
+			
+			$update = $this->database->query($sql);
+
+			$this->database->close();
+
+			return json_encode($update);
 
 			//will need to check medoo to see what we can get back after the insert
 			//like the ID of the inserted record and then return a message to say the insert was
 			//successful
 
-			return 'Your input is appreciated';
+			// return 'Your input is appreciated';
 
 		} catch (Exception $e) {
 			return json_encode($e);
@@ -81,15 +65,29 @@ class transportUpdatesController {
 	 * based on a sepcfic date]
 	 * @return [type] [description]
 	 */
-	public function retrieveAllTransportData($date) {
+	public function retrieveAllTransportData() {
+
+		$time = strtotime('-30 minutes');
+		$date = date('Y-m-d H:i:s', $time);
+
 		try {
 
-			$data = $this->database->select('transport_updates', '*', 
-				[
-					'insert_date[>]' => $date
-				]
-			);
-			return json_encode($data);
+			$sql = "SELECT id, date_created, train_id, line_id, update_text, status, sessionid, date_updated, arrival_time, station
+				FROM metrorail_updates WHERE date_created > '" . $date . "'";
+			
+			$data = $this->database->query($sql);
+
+			$result = array();
+
+			if(mysqli_num_rows($data) > 0) {
+				while($row = $data->fetch_array()) {
+					$result[] = $row;
+				}
+			}
+
+			$this->database->close();
+
+			return json_encode($result);
 
 		} catch (Exception $e) {
 			return json_encode($e);
