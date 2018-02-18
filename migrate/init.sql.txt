@@ -19,3 +19,24 @@ select * from metrodb_updates.transport_updates;
 
 alter table metrodb_updates.transport_updates
 modify column `transport_location` VARCHAR(20) not null default '0';
+
+=========
+
+new table setups here  below 
+
+create table metrorail_updates (
+`id` int(10) unsigned not null AUTO_INCREMENT,
+`date_created` TIMESTAMP default CURRENT_TIMESTAMP,
+`train_id` VARCHAR(20),
+`line_id` int(1) not null,
+`update_text` VARCHAR(280),
+`status` int(1),
+`sessionid` VARCHAR(280),
+primary key(id));
+
+create table metrorail_lines (
+`id` int(10) unsigned not null AUTO_INCREMENT,
+`date_created` TIMESTAMP default CURRENT_TIMESTAMP,
+`line_name` VARCHAR(50),
+primary key(id));
+
